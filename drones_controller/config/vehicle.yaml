@@ -1,0 +1,9 @@
+so3_controller:
+  ros__parameters:
+
+    # Physical vehicle properties
+    mass: 1.5
+    gravity: 9.81
+
+    # Moment of Inertia tensor diagonal elements [Jxx, Jyy, Jzz] in kg*m^2
+    inertia: [0.02, 0.02, 0.04]
