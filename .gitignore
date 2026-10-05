@@ -1,0 +1,25 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Backup and temp files
+*.backup
+*.phase*
+*~
+*.swp
+
+# ROS 2 & colcon build artifacts
+build/
+install/
+log/
+logs/
+.pytest_cache/
+
+# Simulation logs & binary state
+*.bin
+*.parm
+*.tlog
+*.tlog.raw
+terrain/
