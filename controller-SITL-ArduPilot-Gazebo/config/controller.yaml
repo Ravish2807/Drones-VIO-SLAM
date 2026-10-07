@@ -1,0 +1,41 @@
+so3_controller:
+  ros__parameters:
+
+    # Control loop frequency
+    rate: 50.0
+
+    # Topic configuration
+    pose_topic: "/ap/v1/pose/filtered"
+    twist_topic: "/ap/v1/twist/filtered"
+    cmd_vel_topic: "/ap/v1/cmd_vel"
+    status_topic: "/ap/v1/status"
+
+    # Target configuration
+    target:
+      x: 20.0
+      y: 5.0
+      z: 20.0
+      yaw: 2.0
+
+    # Translational position controller gains (Kp, Kv)
+    position:
+      kp: [0.5, 0.5, 0.5]
+      kv: [0.2, 0.2, 0.2]
+
+    # Limits and tolerances
+    limits:
+      max_velocity: 0.5
+      position_tolerance: 0.10
+      velocity_tolerance: 0.05
+
+    # Safety settings
+    safety:
+      state_timeout: 0.2
+      enable_command: true
+
+    # Legacy / research SO(3) parameters
+    mass: 1.5
+    gravity: 9.81
+    inertia: [0.02, 0.02, 0.04]
+    kR: [4.0, 4.0, 2.0]
+    kOmega: [0.8, 0.8, 0.5]
