@@ -1,0 +1,26 @@
+# CF2X starting parameters; validate against installed package model.
+drone_model: CF2X
+mass: 0.027
+gravity: 9.81
+inertia: [1.4e-5, 1.4e-5, 2.17e-5]
+arm_length: 0.0397
+thrust_coefficient: 3.16e-10
+moment_coefficient: 7.94e-12
+min_rpm: 0.0
+max_rpm: 21700.0
+physics_hz: 240
+control_hz: 60
+# Assumed X layout viewed from above. Confirm numbering/spin signs from assets.
+rotor_positions:
+  - [0.028071, -0.028071, 0.0]
+  - [-0.028071, -0.028071, 0.0]
+  - [-0.028071, 0.028071, 0.0]
+  - [0.028071, 0.028071, 0.0]
+rotor_spin_directions: [-1, 1, -1, 1]
+position_gains:
+  kp: [1.5, 1.5, 4.0]
+  kv: [1.2, 1.2, 2.0]
+attitude_gains:
+  kp: [0.00045, 0.00045, 0.00030]
+  kw: [0.00008, 0.00008, 0.00006]
+max_tilt_deg: 30.0
