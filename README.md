@@ -1,4 +1,4 @@
-# Phase 1: controlled quadrotor and flight data
+# Quadrotor controller: baseline, validation, and comparison
 
 This project implements trajectory tracking, position control, desired attitude/thrust generation, SO(3) attitude control, motor allocation, PyBullet simulation, logging, plots, and tracking metrics. VIO is out of scope.
 
@@ -8,4 +8,21 @@ Conventions: right-handed ENU world (+z up); body +z is the thrust axis; thrust 
 
 `config/drone.yaml` contains CF2X starting parameters and an assumed X-frame rotor order/sign. Confirm these against the installed package's model assets and rotor setup before relying on the mixer. Each run writes CSV, metrics, position/error/velocity/attitude/attitude-error/angular-rate/control/motor plots, and an actual-vs-desired 3D trajectory under `results/<experiment>/`.
 
-Run `python main.py --experiment {hover|position_step|trajectory|demo}`. Options include `--gui`, `--duration`, `--output`, `--config`, and `--dry-run`. Metrics are descriptive: position/attitude RMSE, final-window altitude error, control effort integrals, and motor saturation samples. `flightlog/` is used instead of `logging/` to avoid shadowing Python's standard library.
+Run `python main.py --experiment {hover|position_step|square|circle|trajectory_3d|trajectory|demo}`. Options include `--gui`, `--duration`, `--output`, `--config`, and Phase 2 conditions such as `--initial-position`, `--initial-rpy-deg`, `--gain-scale`, state noise, and timed external force/torque. Every experiment writes `data.csv`, `config.yaml`, `metrics.json`, and plots. Metrics include per-axis and 3D RMSE, maximum tracking error, attitude error angle, step rise/settling/overshoot, control effort, saturation count/percentage, and disturbance recovery time where applicable.
+
+Run the complete repeatable Phase 2 matrix headlessly with `python -m experiments.run_suite`; use `--quick` for only hover and step, and `--dry-run` for pipeline checks only. The suite includes square/circle/3D trajectories, initial position/attitude errors, force/torque disturbances, state noise, saturation stress, and a 0.5/1/1.5 gain scale sweep. The baseline controller equations are unchanged; all conditions are applied around the controller. `flightlog/` avoids shadowing Python's standard-library `logging` module.
+
+## Phase 3: controller comparison
+
+Phase 2's controller and parameters are frozen in `controller/baseline/controller.py` and `config/baseline_phase2.yaml`. The shared API accepts `ControlState` and `DesiredState` and returns a collective-thrust/body-torque `ControlOutput`. `geometric_so3` uses the same position loop and SO(3) feedback plus \(\omega\times J\omega\) compensation. Isolated roll, pitch, yaw, and combined attitude steps are available. The equations and conventions are recorded in `docs/phase3_baseline.md`.
+
+Run one controller or compare baseline with geometric using exactly the same experiment cases and seeds:
+
+```bash
+python main.py --controller geometric --experiment hover
+python main.py --controller geometric --experiment attitude_roll
+python -m experiments.compare_controllers --quick
+python -m experiments.compare_controllers
+```
+
+The comparison writes per-run reproducibility artifacts below `results/phase3/<controller>/<case>/`, plus `comparison.csv` and `comparison.png`. LQR and MPC are intentionally not implemented yet; validate this pair with the same PyBullet matrix before adding another controller.
